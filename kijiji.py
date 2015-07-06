@@ -16,7 +16,7 @@ def combineLists(list1,list2):
     return listy
 
 # Main get part
-page = requests.get('http://www.kijiji.ca/h-calgary/1700199')
+page = requests.get('http://www.kijiji.ca/h-red-deer/1700136')
 print colored(page.status_code,'red')
 print colored(page.encoding,'green')
 tree=html.fromstring(page.text)
