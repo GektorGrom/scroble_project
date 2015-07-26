@@ -1,23 +1,42 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from page_items import create_Itmes
-print "привет мир"
+from page_items import create_Itmes, createArticle
+from kijiji import createCategory
 from termcolor import colored
+from parse_rest.connection import ParseBatcher
+from parse_rest.datatypes import Object as ParseObject
 
-deep_pages=4
-list_url='http://www.kijiji.ca/b-cars-trucks/red-deer/convertible__coupe__hatchback__other+body+type__sedan__wagon/c174l1700136a138'
-def create_list_items(deep_pages, list_url):
-    result=[]
-    for x in xrange(0,deep_pages):
-        if result!=[]:
-            result=result+create_Itmes(list_url)[0]
-            _, list_url = create_Itmes(list_url)
-        else:
-            result = result+create_Itmes(list_url)[0]
-            list_url = create_Itmes(list_url)[1]
-    return result
+batcher = ParseBatcher()
+# GLOBAL VARIABLES
+CITY='http://www.kijiji.ca/h-red-deer/1700136'
+DEEP=7
+class Category(ParseObject):
+       pass
+def create_parse_Category(name, url):
+    article = Category(**locals())
+    return article
 
-y = create_list_items(2,list_url)
-for x in y:
-    print colored(x['name'],'green') , x['discription'], colored(x['price'],'red')
-print len(y)
+def create_list_items(list_url):
+    current_url='http://www.kijiji.ca'+list_url[1]
+    new_category=create_parse_Category(name=list_url[0],
+        url=list_url[1]
+        )
+    new_category.save()
+    print list_url[0]
+    for x in xrange(0,DEEP):
+        if current_url:
+            print current_url
+            items=create_Itmes(current_url)
+            batcher.batch_save(items[0])
+            current_url = items[1]
+
+def push_data(city_url):
+    print 'start pushing data'
+    for k, m in createCategory(city_url).iteritems():
+        # global sector_name
+        createArticle.sector_name=k
+        print k
+        map (create_list_items, m)
+
+
+push_data(CITY)

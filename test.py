@@ -6,7 +6,7 @@ from lxml import html
 import requests
 from termcolor import colored
 
-page = requests.get('http://www.kijiji.ca')
-tree=html.fromstring(page.text)
-html =tree.xpath('//text()')
-print html
+def local_print(**args):
+    y=2
+    print(**args)
+local_print(name='s', price=45)
