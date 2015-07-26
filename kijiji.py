@@ -27,7 +27,7 @@ def combineLists(list1,list2):
 
 def createCategory(URL):
     page = requests.get(URL)
-    print colored(page.status_code,'red')
+    print colored(page.status_code,'green')
     print colored(page.encoding,'green')
     tree=html.fromstring(page.text)
     sections = len(tree.xpath('//*[@id="Categories"]/section'))

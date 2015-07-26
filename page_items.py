@@ -53,13 +53,12 @@ def createArticle(**args):
 # Main get part
 def create_Itmes(url_sections):
     array_list=[]
-    print '--------------------'
     page = requests.get(url_sections)
     tree=html.fromstring(page.text)
     try:
         next_page='http://www.kijiji.ca'+tree.cssselect("div.bottom-bar>div.pagination>a[title~=Next]")[0].get('href')
     except:
-        print 'next page doesnt exist'
+        print colored('next page doesnt exist','green','on_red')
         next_page=False
     for desription in tree.cssselect("table.regular-ad"):
         try:
@@ -70,6 +69,7 @@ def create_Itmes(url_sections):
             name=desription.cssselect("td.description a")[0].text.strip(),
             url=desription.cssselect("td.description a")[0].get('href'),
             discription=desription.cssselect("td.description p")[0].text.encode('utf-8').strip(),
-            price=price
+            price=price,
+            category=create_Itmes.category
             ))
     return array_list, next_page
